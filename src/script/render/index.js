@@ -165,6 +165,10 @@ Render.prototype.setMolecule = function (ctab) {
 	this.update(false);
 };
 
+Render.prototype.onUpdate = function( callback ) {
+    this.clientArea.addEventListener("structureUpdated", callback);
+};
+
 Render.prototype.update = function (force, viewSz) { // eslint-disable-line max-statements
 	viewSz = viewSz || new Vec2(this.clientArea.clientWidth || 100,
 		this.clientArea.clientHeight || 100);
@@ -209,6 +213,9 @@ Render.prototype.update = function (force, viewSz) { // eslint-disable-line max-
 			this.paper.setViewBox(bb.pos().x - marg * rescale - (csz.x * rescale - sz2.x) / 2, bb.pos().y - marg * rescale - (csz.y * rescale - sz2.y) / 2, csz.x * rescale, csz.y * rescale);
 			/* eslint-enable no-mixed-operators*/
 		}
+        var event = new Event("structureUpdated");
+        event.struct = this.ctab.molecule;
+        this.clientArea.dispatchEvent(event);
 	}
 };
 
